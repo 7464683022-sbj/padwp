@@ -164,6 +164,66 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
+<section id="dbca" class="level2">
+<h2 class="anchored" data-anchor-id="dbca">DBCA</h2>
+<p>Factor 1 - dosis de fertilización nitrogenada (kg/ha) factor 2 - cultivares de papa peruanita canchan diseño : DBCA Repeticiones : 4 UE - 3 dosis x 2 cultivares&nbsp;x&nbsp;4&nbsp;rep&nbsp;=&nbsp;24</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cargar librería</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(agricolae)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Definir los factores</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>dosis <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"0"</span>, <span class="st">"50"</span>, <span class="st">"100"</span>)              <span class="co"># kg/ha de N</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>cultivares <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Peruanita"</span>, <span class="st">"Canchan"</span>)   <span class="co"># tipos de papa</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Crear los tratamientos como combinaciones factoriales</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>tratamientos <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(<span class="fu">outer</span>(dosis, cultivares, paste, <span class="at">sep =</span> <span class="st">"_"</span>))</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Ver los tratamientos generados</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>tratamientos</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "0_Peruanita"   "50_Peruanita"  "100_Peruanita" "0_Canchan"    
+[5] "50_Canchan"    "100_Canchan"  </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] "0_Peruanita" "50_Peruanita" "100_Peruanita"</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#     "0_Canchan" "50_Canchan" "100_Canchan"</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Número de bloques o repeticiones</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>bloques <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Crear el diseño en bloques completos al azar (DBCA)</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>dbca <span class="ot">&lt;-</span> <span class="fu">design.rcbd</span>(tratamientos, <span class="at">r =</span> bloques, <span class="at">seed =</span> <span class="dv">123</span>, <span class="at">serie =</span> <span class="dv">2</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostrar el diseño generado</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(dbca<span class="sc">$</span>book)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   plots block  tratamientos
+1    101     1   0_Peruanita
+2    102     1   100_Canchan
+3    103     1     0_Canchan
+4    104     1  50_Peruanita
+5    105     1    50_Canchan
+6    106     1 100_Peruanita
+7    201     2     0_Canchan
+8    202     2  50_Peruanita
+9    203     2   100_Canchan
+10   204     2   0_Peruanita
+11   205     2    50_Canchan
+12   206     2 100_Peruanita
+13   301     3     0_Canchan
+14   302     3  50_Peruanita
+15   303     3   0_Peruanita
+16   304     3   100_Canchan
+17   305     3    50_Canchan
+18   306     3 100_Peruanita
+19   401     4  50_Peruanita
+20   402     4     0_Canchan
+21   403     4   0_Peruanita
+22   404     4 100_Peruanita
+23   405     4    50_Canchan
+24   406     4   100_Canchan</code></pre>
+</div>
+</div>
+</section>
 </section>
 
 </main>

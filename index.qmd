@@ -61,3 +61,41 @@ print(dca$book)
 
 ```
 
+
+## DBCA
+
+Factor 1 - dosis de fertilización nitrogenada (kg/ha)
+factor 2 - cultivares de papa
+peruanita
+canchan
+diseño : DBCA
+Repeticiones : 4
+UE - 3 dosis x 2 cultivares x 4 rep = 24
+
+```{r}
+# Cargar librería
+library(agricolae)
+
+# Definir los factores
+dosis <- c("0", "50", "100")              # kg/ha de N
+cultivares <- c("Peruanita", "Canchan")   # tipos de papa
+
+# Crear los tratamientos como combinaciones factoriales
+tratamientos <- as.vector(outer(dosis, cultivares, paste, sep = "_"))
+
+# Ver los tratamientos generados
+tratamientos
+# [1] "0_Peruanita" "50_Peruanita" "100_Peruanita"
+#     "0_Canchan" "50_Canchan" "100_Canchan"
+
+# Número de bloques o repeticiones
+bloques <- 4
+
+# Crear el diseño en bloques completos al azar (DBCA)
+dbca <- design.rcbd(tratamientos, r = bloques, seed = 123, serie = 2)
+
+# Mostrar el diseño generado
+print(dbca$book)
+
+```
+
